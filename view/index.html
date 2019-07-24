@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+  <head>
+    <script data-require="angular.js@*" data-semver="4.0.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script data-require="angular.js@*" data-semver="4.0.0" src="script.ts"></script>
+    <script data-require="angular.js@*" data-semver="4.0.0" src="system.config.js"></script>
+    <script data-require="angular.js@*" data-semver="4.0.0" src="tsconfig.json"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <div class="container" ng-controller="MainController as main">
+      <header>
+         <h1>Random Number & Color Generator</h1>
+      </header>
+      <article>
+        First name:<br>
+        <input type="text" name="firstname" ng-model="main.user.mFname">
+        <br>
+        Last name:<br>
+        <input type="text" name="lastname" ng-model="main.user.mLname">
+        <br>
+        Birth Year:<br>
+        <select ng-model="main.user.mBirthYr" ng-options="n for n in [] | range:1900:2018"></select>
+        <br><br>
+        Favorite Color:<br>
+        <input type="text" name="favoritecolor" ng-model="main.user.mColor" class="field left" readonly>
+        <input type="submit" value="Get Favorite Color" ng-click="CalculateColor()">
+      	<br><br>
+      	Favorite Number:<br>
+        <input type="text" name="favoritenumber" ng-model="main.user.mFavNum" class="field left" readonly>
+        <input type="submit" value="Get Favorite Number" ng-click="CalculateFaveNum()">
+      </article>
+      <footer></footer>
+    </div>
+  </body>
+
+</html>
