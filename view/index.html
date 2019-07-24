@@ -112,6 +112,16 @@
 				background-color: #434E3C;
 			}
         </style>
+        <script>
+        getData();
+         async function getData(){
+        	 const response = await fetch('/init')
+         	const data = await response.json();
+         	document.getElementById('damName').textContent= `${data.damName}`;
+         	document.getElementById('waterLevel').textContent= `${data.waterLevel}`;
+             }
+        	                   	
+        </script>
 </head>
 <body>
 <header>
@@ -155,13 +165,13 @@
 					<tr>
 						<td>Dam :</td>
 						<td>
-							 
+							<span id="damName"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Current Water Level :</td>
 						<td>
-							
+							<span id="waterLevel"></span>;
 						</td>
 					</tr>
 					<tr>
