@@ -13,8 +13,6 @@ var appport = process.env.PORT || 8888;
 app.use(express.static(__dirname + '/view'));
 
 app.get('*', function(req, res) {
-	res.sendFile('home.html',{ root: 'view' });
+	res.sendFile('index.html',{ root: 'view' });
 });
 app.listen(appport);
-
-
