@@ -112,22 +112,33 @@
 				background-color: #434E3C;
 			}
         </style>
-        <script>
-        getData();
-         async function getData(){
-        	 const response = await fetch('/init')
-         	const data = await response.json();
-         	document.getElementById('damName').textContent= `${data.damName}`;
-         	document.getElementById('waterLevel').textContent= `${data.waterLevel}`;
-             }
-        	                   	
-        </script>
+        
 </head>
 <body>
+		<script>
+			getData();
+			async function getData(){
+				const response = await fetch('/api',{
+				headers : { 
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+					}
+				});
+				var data = await response.json();
+				//console.log("sss:"+data);   
+				document.getElementById('damName').textContent= `${data["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]}`;
+				document.getElementById('waterLevel').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tLevel in Feet_2"]}`;
+				document.getElementById('outflow').textContent= `${data["Outflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
+				document.getElementById('location').textContent= `${data["Unit Name_2"]}`;
+				document.getElementById('inflow').textContent= `${data["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
+				document.getElementById('Capacity').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCapacity in T.M.C._2"]}`; 
+				document.getElementById('district').textContent= `${data["District_2"]}`;	
+			};        	                   	
+		</script>
 <header>
             <div class="header">
                 <img src="<c:url value='/images/logo.jpg'/>" />     <h1>IntelliDams</h1>
-                <h3>Predeict & Plan</h3>                
+                <h3>Predict to Plan</h3>                
             </div>
         </header>
         <p id="p">
@@ -163,21 +174,45 @@
 			<section id="search2">
 				<table>
 					<tr>
-						<td>Dam :</td>
+						<td>Reservoir Name :</td>
 						<td>
 							<span id="damName"></span>;
 						</td>
 					</tr>
 					<tr>
-						<td>Current Water Level :</td>
+						<td>District :</td>
+						<td>
+							<span id="district"></span>;
+						</td>
+					</tr>
+					<tr>
+						<td>Current Water Level [Ft]:</td>
 						<td>
 							<span id="waterLevel"></span>;
 						</td>
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
+						<td>Unit :</td>
 						<td>
-							
+							<span id="location"></span>;
+						</td>
+					</tr>
+					<tr>
+						<td>Current Inflow [cusec]:</td>
+						<td>
+							<span id="inflow"></span>;
+						</td>
+					</tr>
+					<tr>
+						<td>Current Outflow [cusec] :</td>
+						<td>
+							<span id="outflow"></span>;
+						</td>
+					</tr>
+					<tr>
+						<td>Gross Storage/ Capacity [T.M.C]:</td>
+						<td>
+							<span id="Capacity"></span>;
 						</td>
 					</tr>
 				</table>
