@@ -118,7 +118,7 @@
 		<script>
 			getData();
 			async function getData(){
-				const response = await fetch('/api',{
+				const response = await fetch('/dam1',{
 				headers : { 
 					'Content-Type': 'application/json',
 					'Accept': 'application/json'
@@ -133,12 +133,30 @@
 				document.getElementById('inflow').textContent= `${data["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
 				document.getElementById('Capacity').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCapacity in T.M.C._2"]}`; 
 				document.getElementById('district').textContent= `${data["District_2"]}`;	
+			};       
+			getDataDam2();
+			async function getDataDam2(){
+				const response = await fetch('/dam2',{
+				headers : { 
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+					}
+				});
+				var data = await response.json();
+				//console.log("sss:"+data);   
+				document.getElementById('damName1').textContent= `${data["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]}`;
+				document.getElementById('waterLevel1').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tLevel in Feet_2"]}`;
+				document.getElementById('outflow1').textContent= `${data["Outflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
+				document.getElementById('location1').textContent= `${data["Unit Name_2"]}`;
+				document.getElementById('inflow1').textContent= `${data["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
+				document.getElementById('Capacity1').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCapacity in T.M.C._2"]}`; 
+				document.getElementById('district1').textContent= `${data["District_2"]}`;	
 			};        	                   	
 		</script>
 <header>
             <div class="header">
                 <img src="<c:url value='/images/logo.jpg'/>" />     <h1>IntelliDams</h1>
-                <h3>Predict to Plan</h3>                
+                <h3>Predeict to Plan</h3>                
             </div>
         </header>
         <p id="p">
@@ -151,68 +169,92 @@
 		<div id="frm">            
 			<section id="search">
 				<table>
-					<tr>
-						<td>Dam :</td>
-						<td>
-							 
-						</td>
-					</tr>
-					<tr>
-						<td>Current Water Level :</td>
-						<td>
-							
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>
-							
-						</td>
-					</tr>
-				</table>
+						<tr>
+							<td>Reservoir Name :</td>
+							<td>
+								<span id="damName"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>District :</td>
+							<td>
+								<span id="district"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Current Water Level [Ft]:</td>
+							<td>
+								<span id="waterLevel"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Unit :</td>
+							<td>
+								<span id="location"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Current Inflow [cusec]:</td>
+							<td>
+								<span id="inflow"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Current Outflow [cusec] :</td>
+							<td>
+								<span id="outflow"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Gross Storage/ Capacity [T.M.C]:</td>
+							<td>
+								<span id="Capacity"></span>;
+							</td>
+						</tr>
+					</table>
 			</section>	
 			<section id="search2">
 				<table>
 					<tr>
 						<td>Reservoir Name :</td>
 						<td>
-							<span id="damName"></span>;
+							<span id="damName1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>District :</td>
 						<td>
-							<span id="district"></span>;
+							<span id="district1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Current Water Level [Ft]:</td>
 						<td>
-							<span id="waterLevel"></span>;
+							<span id="waterLevel1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Unit :</td>
 						<td>
-							<span id="location"></span>;
+							<span id="location1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Current Inflow [cusec]:</td>
 						<td>
-							<span id="inflow"></span>;
+							<span id="inflow1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Current Outflow [cusec] :</td>
 						<td>
-							<span id="outflow"></span>;
+							<span id="outflow1"></span>;
 						</td>
 					</tr>
 					<tr>
 						<td>Gross Storage/ Capacity [T.M.C]:</td>
 						<td>
-							<span id="Capacity"></span>;
+							<span id="Capacity1"></span>;
 						</td>
 					</tr>
 				</table>
