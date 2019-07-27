@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "Insert description here",
   "dependencies":{
-  	"express":"*"
+  	"express":"*",
+  	"request":"*",
+  	"cheerio":"*",
+  	"tabletojson":"*"
   },
   "engine":"node >=0.6.x",
   "scripts": {
