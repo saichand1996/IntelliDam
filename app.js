@@ -36,6 +36,26 @@ function getItem(bucketName, itemName, callback) {
     });
 }
 
+function getDataFromDam1(callback){
+	tabletojson.convertUrl(
+		'https://irrigationap.cgg.gov.in/wrd/dashBoard',
+		{ stripHtmlFromCells: true },
+		function(tablesAsJson) {
+		  //Print out the 1st row from the 2nd table on the above webpage as JSON		   
+		   //console.log(data);
+		   for(i=1;i<40;i++){
+				var data = (tablesAsJson[1][i]);
+				obj = JSON.parse(JSON.stringify(data));
+				if(obj["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]=="SRISAILAM"){
+					console.log(data);
+					break;
+				}
+		   }
+		  callback(JSON.parse(JSON.stringify(data)));
+		}
+	  );
+}
+
 var app = express();
 
 var appport = process.env.PORT || 8888;
@@ -62,17 +82,37 @@ app.get('/dam1',function(req, res) {
 		  res.json(JSON.parse(JSON.stringify(data)));
 		}
 	  );
-	  getItem('rainfall-donotdelete-pr-jdznbtggz5fj5t','Estimation.csv', function(result){		
-		jsonData  = JSON.parse(JSON.stringify(data));
-		console.log(jsonData);
-	});	 
 });	
 
-app.get('/predict1',function(req,res){
-	  getItem('rainfall-donotdelete-pr-jdznbtggz5fj5t','Estimation.csv', function(result){
-		console.log(result);
-		JSON.parse(JSON.stringify(data))
+app.get('/predict1',function(req,res){	
+	getItem('rainfall-donotdelete-pr-jdznbtggz5fj5t','Estimation.csv', function(result){		
+		jsonData  = JSON.parse(JSON.stringify(result));
+		console.log(jsonData);
 	});
+	getDataFromDam1(function(result){
+		var predictedPrecipitation = 370; //in mm from Cloud Objected Storage
+		const runOffFactor = 0.9;
+		const areaOfDam1 = 616; //in km^2
+		var capacity = 216; //in Tmcft
+		var specificOptimumLevel = 854; //in ft
+		var collectedRainfall = (predictedPrecipitation)*(areaOfDam1*(1000000))*(runOffFactor); //in liters
+		var TotalFtOfrainfall = (collectedRainfall * 0.035315) / (10.764*areaOfDam1*(1000000)); //in ft
+		var currentLevel = (result["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tLevel in Feet_2"]); //in  ft
+		var TotalEstimatedLevel = Number(Math.round(TotalFtOfrainfall,2)) + Number(currentLevel); //in ft
+		var inflowRate = result["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]*(36000); //accumulated inflow cu ft after 10hrs
+		var outflowRate = result["Outflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]*(36000); //left outflow cu ft after 10hrs
+		var finalEstimation = TotalEstimatedLevel+(inflowRate/(10.764*areaOfDam1*(1000000)))-(outflowRate/(10.764*areaOfDam1*(1000000))); // after 10hrs  in ft
+		var predictionMsg = "";
+		if(finalEstimation > specificOptimumLevel){
+			predictionMsg="Level Crossing Observed NEED ATTENTION";
+		}
+		else {
+			predictionMsg="Optimum";
+		}
+		//finalEstimation = (finalEstimation)/(10.764*areaOfDam1*(1000000));
+		res.json({estimation:finalEstimation,prediction:predictionMsg});
+	})
+	
 });
 
 app.get('/dam2',function(req, res) {

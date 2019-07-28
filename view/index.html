@@ -151,7 +151,20 @@
 				document.getElementById('inflow1').textContent= `${data["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]}`;
 				document.getElementById('Capacity1').textContent= `${data["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCapacity in T.M.C._2"]}`; 
 				document.getElementById('district1').textContent= `${data["District_2"]}`;	
-			};        	                   	
+			};  
+			getPredictionOpt();
+			async function getPredictionOpt(){
+				const response = await fetch('/predict1',{
+				headers : { 
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+					}
+				});
+				var data = await response.json();
+				//console.log("sss:"+data);   
+				document.getElementById('estim').textContent= `${data["estimation"]}`;
+				document.getElementById('warning').textContent= `${data["prediction"]}`;					
+			}      	                   	
 		</script>
 <header>
             <div class="header">
@@ -211,6 +224,18 @@
 								<span id="Capacity"></span>;
 							</td>
 						</tr>
+						<tr>
+							<td>Estimated Water Level [Ft] after 10 hours:</td>
+							<td>
+								<span id="estim"></span>;
+							</td>
+						</tr>
+						<tr>
+							<td>Predection Warning:</td>
+							<td>
+								<span id="warning"></span>;
+							</td>
+						</tr>						
 					</table>
 			</section>	
 			<section id="search2">

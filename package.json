@@ -2,15 +2,17 @@
   "name": "insert-title-here",
   "version": "0.0.1",
   "description": "Insert description here",
-  "dependencies":{
-  	"express":"*",
-  	"request":"*",
-  	"cheerio":"*",
-  	"tabletojson":"*"
+  "dependencies": {
+    "cheerio": "*",
+    "express": "^4.17.1",
+    "ibm-cos-sdk": "^1.5.1",
+    "nodemon": "^1.19.1",
+    "request": "^2.88.0",
+    "tabletojson": "*"
   },
-  "engine":"node >=0.6.x",
+  "engine": "node >=0.6.x",
   "scripts": {
-   	"start": "node app.js"
+    "start": "node app.js"
   },
-  "homepage":"/"
+  "homepage": "/"
 }
