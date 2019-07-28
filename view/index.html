@@ -163,12 +163,21 @@
 				var data = await response.json();
 				//console.log("sss:"+data);   
 				document.getElementById('estim').textContent= `${data["estimation"]}`;
-				document.getElementById('warning').textContent= `${data["prediction"]}`;					
+				document.getElementById('warning').textContent= `${data["prediction"]}`;
+				const response = await fetch('/predict2',{
+				headers : { 
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+					}
+				});
+				var data = await response.json();	
+				document.getElementById('estim2').textContent= `${data["estimation"]}`;
+				document.getElementById('warning2').textContent= `${data["prediction"]}`;				
 			}      	                   	
 		</script>
 <header>
             <div class="header">
-                <img src="<c:url value='/images/logo.jpg'/>" />     <h1>IntelliDams</h1>
+                <h1>IntelliDams</h1>
                 <h3>Predeict to Plan</h3>                
             </div>
         </header>
@@ -178,7 +187,7 @@
             <a class="a1" href="gallery.html">ABOUT</a>
             <a class="a1" href="about.html">CONTACT US</a>
         </p>
-        <img id="banner" src="<c:url value='/banner2.jpg'/>" alt="Banner Image"/>
+        <img id="banner"/>
 		<div id="frm">            
 			<section id="search">
 				<table>
@@ -282,6 +291,18 @@
 							<span id="Capacity1"></span>;
 						</td>
 					</tr>
+					<tr>
+						<td>Estimated Water Level [Ft] after 10 hours:</td>
+						<td>
+							<span id="estim2"></span>;
+						</td>
+					</tr>
+					<tr>
+						<td>Predection Warning:</td>
+						<td>
+							<span id="warning2"></span>;
+						</td>
+					</tr>	
 				</table>
 			</section>		
        </div>

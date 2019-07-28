@@ -10,11 +10,13 @@ const request = require('request');
 const cheerio = require('cheerio');
 const tabletojson = require('tabletojson');
 const AWS  = require('ibm-cos-sdk');
+const csv = require('csv-parser');
+const Readable = require('stream').Readable;
 
 const config = {
     endpoint: 's3.eu.cloud-object-storage.appdomain.cloud',
-    apiKeyId: 'OkzCQExhDQy8Pk9TzMbTEDddM4LQdWgWcv-ZH7ENafvC',
-    serviceInstanceId: 'crn:v1:bluemix:public:cloud-object-storage:global:a/9b204a210243411b914dde8c0c4302b1:7c0caf31-789e-421c-87a4-d16a8b1c0948::',
+    apiKeyId: '9MLsZ9E6PzwGcB7iRSIGSs5TGK2NCNxYSsMuOnHx7mBC',
+    serviceInstanceId: 'crn:v1:bluemix:public:cloud-object-storage:global:a/29adf14182ff43feac5819b5164f721b:c604abaf-e973-456e-9a95-245e7014458b::',
 };
 
 var cos = new AWS.S3(config);
@@ -75,7 +77,7 @@ app.get('/dam1',function(req, res) {
 				var data = (tablesAsJson[1][i]);
 				obj = JSON.parse(JSON.stringify(data));
 				if(obj["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]=="SRISAILAM"){
-					//console.log(data);
+					console.log(data);
 					break;
 				}
 		   }
@@ -85,12 +87,20 @@ app.get('/dam1',function(req, res) {
 });	
 
 app.get('/predict1',function(req,res){	
-	getItem('rainfall-donotdelete-pr-jdznbtggz5fj5t','Estimation.csv', function(result){		
-		jsonData  = JSON.parse(JSON.stringify(result));
-		console.log(jsonData);
+	const csvResults = [];
+	var predictedPrecipitation =""; //in mm from Cloud Objected Storage
+	getItem('rainfallpredictionalgorithm-donotdelete-pr-q71zfvcq5l3gzi','Predicted_Rainfall.csv', function(result){		
+		const s = new Readable();
+		s._read = () => {}; 
+		s.push(result);
+		s.push(null);
+		s.pipe(csv()).on('data', (data) => csvResults.push(data))
+		.on('end', () => {
+			predictedPrecipitation = csvResults[0]['Pred_Val'];
+		});
 	});
 	getDataFromDam1(function(result){
-		var predictedPrecipitation = 370; //in mm from Cloud Objected Storage
+	
 		const runOffFactor = 0.9;
 		const areaOfDam1 = 616; //in km^2
 		var capacity = 216; //in Tmcft
