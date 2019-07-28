@@ -163,7 +163,10 @@
 				var data = await response.json();
 				//console.log("sss:"+data);   
 				document.getElementById('estim').textContent= `${data["estimation"]}`;
-				document.getElementById('warning').textContent= `${data["prediction"]}`;
+				document.getElementById('warning').textContent= `${data["prediction"]}`;							
+			}     
+			getOutput2();
+			async function getOutput2(){
 				const response = await fetch('/predict2',{
 				headers : { 
 					'Content-Type': 'application/json',
@@ -172,8 +175,8 @@
 				});
 				var data = await response.json();	
 				document.getElementById('estim2').textContent= `${data["estimation"]}`;
-				document.getElementById('warning2').textContent= `${data["prediction"]}`;				
-			}      	                   	
+				document.getElementById('warning2').textContent= `${data["prediction"]}`;	
+			} 	                   	
 		</script>
 <header>
             <div class="header">

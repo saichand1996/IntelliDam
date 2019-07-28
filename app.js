@@ -38,7 +38,7 @@ function getItem(bucketName, itemName, callback) {
     });
 }
 
-function getDataFromDam1(callback){
+function getDataFromDam1(damname , callback){
 	tabletojson.convertUrl(
 		'https://irrigationap.cgg.gov.in/wrd/dashBoard',
 		{ stripHtmlFromCells: true },
@@ -48,7 +48,7 @@ function getDataFromDam1(callback){
 		   for(i=1;i<40;i++){
 				var data = (tablesAsJson[1][i]);
 				obj = JSON.parse(JSON.stringify(data));
-				if(obj["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]=="SRISAILAM"){
+				if(obj["Reservoir\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tName_2"]==damname){
 					console.log(data);
 					break;
 				}
@@ -99,7 +99,46 @@ app.get('/predict1',function(req,res){
 			predictedPrecipitation = csvResults[0]['Pred_Val'];
 		});
 	});
-	getDataFromDam1(function(result){
+	getDataFromDam1("SRISAILAM",function(result){
+	
+		const runOffFactor = 0.9;
+		const areaOfDam1 = 616; //in km^2
+		var capacity = 216; //in Tmcft
+		var specificOptimumLevel = 854; //in ft
+		var collectedRainfall = (predictedPrecipitation)*(areaOfDam1*(1000000))*(runOffFactor); //in liters
+		var TotalFtOfrainfall = (collectedRainfall * 0.035315) / (10.764*areaOfDam1*(1000000)); //in ft
+		var currentLevel = (result["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tLevel in Feet_2"]); //in  ft
+		var TotalEstimatedLevel = Number(Math.round(TotalFtOfrainfall,2)) + Number(currentLevel); //in ft
+		var inflowRate = result["Inflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]*(36000); //accumulated inflow cu ft after 10hrs
+		var outflowRate = result["Outflow in\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCusecs_2"]*(36000); //left outflow cu ft after 10hrs
+		var finalEstimation = TotalEstimatedLevel+(inflowRate/(10.764*areaOfDam1*(1000000)))-(outflowRate/(10.764*areaOfDam1*(1000000))); // after 10hrs  in ft
+		var predictionMsg = "";
+		if(finalEstimation > specificOptimumLevel){
+			predictionMsg="Level Crossing Observed NEED ATTENTION";
+		}
+		else {
+			predictionMsg="Optimum";
+		}
+		//finalEstimation = (finalEstimation)/(10.764*areaOfDam1*(1000000));
+		res.json({estimation:finalEstimation,prediction:predictionMsg});
+	})
+	
+});
+
+app.get('/predict2',function(req,res){	
+	const csvResults = [];
+	var predictedPrecipitation =""; //in mm from Cloud Objected Storage
+	getItem('rainfallpredictionalgorithm-donotdelete-pr-q71zfvcq5l3gzi','Predicted_Rainfall.csv', function(result){		
+		const s = new Readable();
+		s._read = () => {}; 
+		s.push(result);
+		s.push(null);
+		s.pipe(csv()).on('data', (data) => csvResults.push(data))
+		.on('end', () => {
+			predictedPrecipitation = csvResults[2]['Pred_Val'];
+		});
+	});
+	getDataFromDam1("NAGARJUNA SAGAR",function(result){
 	
 		const runOffFactor = 0.9;
 		const areaOfDam1 = 616; //in km^2
