@@ -1,6 +1,5 @@
 ---
 applications:
 - name: IntelliDam
-  memory: 512M
-  host: IntelliDam.apic
-  domain: mybluemix.net
+  memory: 50M
+  random-route: true
