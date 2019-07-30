@@ -143,7 +143,7 @@ app.get('/predict2',function(req,res){
 		const runOffFactor = 0.9;
 		const areaOfDam1 = 616; //in km^2
 		var capacity = 216; //in Tmcft
-		var specificOptimumLevel = 854; //in ft
+		var specificOptimumLevel = 590; //in ft
 		var collectedRainfall = (predictedPrecipitation)*(areaOfDam1*(1000000))*(runOffFactor); //in liters
 		var TotalFtOfrainfall = (collectedRainfall * 0.035315) / (10.764*areaOfDam1*(1000000)); //in ft
 		var currentLevel = (result["Current\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tLevel in Feet_2"]); //in  ft
